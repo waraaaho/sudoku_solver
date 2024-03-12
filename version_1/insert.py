@@ -1,4 +1,5 @@
 import validate
+import validate_v2
 import retrieve
 import time
 
@@ -70,13 +71,14 @@ def start_insertion(sudoku, iteration_limit = 1000):
     return sudoku
 
 if __name__ == '__main__':
-  # get input
-  input_sudoku = input("Tell me the sudoku: ") 
-  # Try to insert a value in the blank cell, check functionality of insert_9x9_element
-  # 023456789456789123789123450234567891567891234891234567345678912678912345912345678
-  # 900500000687340050004107030040026008026051490091403062002700905000000301500009607
-  # 900310004002000600000056809024680000000003001630000400008000150291064730560178940
-  sudoku = retrieve.transform_str_to_df(input_sudoku)
-  print(sudoku)
-  print(start_insertion(sudoku))
-  print(sudoku)
+    # get input
+    input_sudoku = input("Tell me the sudoku: ") 
+    # Try to insert a value in the blank cell, check functionality of insert_9x9_element
+    # 023456789456789123789123450234567891567891234891234567345678912678912345912345678
+    # 900500000687340050004107030040026008026051490091403062002700905000000301500009607
+    # 900310004002000600000056809024680000000003001630000400008000150291064730560178940
+    sudoku = retrieve.transform_str_to_df(input_sudoku)
+    numbers_availability = validate_v2.create_numbers_availability(sudoku)
+    exit()
+    print(start_insertion(sudoku))
+    print(sudoku)

@@ -1,0 +1,8 @@
+
+Fix: Including number point of view
+The number could (done in V1, existence proof) and could only(in V2, uniqueness proof) insert into that cell 
+
+V1: 
+Solver Mechanism: write a number iff the number is only possible answer for that particular cell (from the cell point of view)
+Good: implemented basic rule
+Bad: Sometimes, multiple numbers could be possible answer for that particular cell without violating the rules at that moment, thus the solver could not determine.

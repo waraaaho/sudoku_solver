@@ -1,6 +1,8 @@
 import pandas as pd
 
 def transform_str_to_df(data_input):
+    # remove space and transform string to 9x9 matrix
+    data_input = data_input.replace(' ','')
     res = []; temp = []
     for i in data_input:
         temp.append(int(i))
