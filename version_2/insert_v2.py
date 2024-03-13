@@ -1,4 +1,3 @@
-import validate
 import validate_v2
 import retrieve
 import time
@@ -22,15 +21,18 @@ def insert_9x9_element(sudoku, numbers_availability, row, col):
         if validate_v2.validate_intermediate_3x3(retrieve.get_square(number_availability, i_pos, j_pos)) \
             or validate_v2.validate_intermediate_hline(retrieve.get_hline(number_availability, row)) \
                 or validate_v2.validate_intermediate_vline(retrieve.get_vline(number_availability, col)):
-
-            # store value if the sudoku is valid
+            
+            # store the number if the sudoku is valid
             sudoku.iloc[row,col] = i
             print(f"inserted {i} at {i_pos}-{j_pos}")
 
             # mark the availability of number in the number_availability
             number_availability = validate_v2.mark_availability(number_availability, row, col)
-            numbers_availability[i-1] = number_availability
-
+            # pd is pass by reference, so no need to return the number_availability
+            #numbers_availability[i-1] = number_availability
+            # Not available for others number as the cell now occupied
+            for j in range(9):
+                numbers_availability[j].iloc[row,col] = False
             break
     return sudoku
 
@@ -58,6 +60,7 @@ def start_insertion(sudoku, numbers_availability, iteration_limit = 100):
     print(f"Number of blanks: {retrieve.count_blank_cell(sudoku)}")
     iteration = 0
     while retrieve.count_blank_cell(sudoku) > 0:
+        #print(f"{iteration}-th sudoku: {sudoku}")
         sudoku = insert_9x9(sudoku, numbers_availability)
         iteration += 1
         if iteration%10 == 0:

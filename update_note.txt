@@ -1,3 +1,12 @@
+Fix: Including early-stopping/code optimisation and double tactic
+early-stopping/code optimisation handles runtime problem
+Double tactic handles hard sudoku
+
+V2:
+Solver Mechanism: consider which cell is a only available for a certain number
+Good: Able to solve easy sudoku
+Bad: Not able to solve sudoku that all remaining empty cells have at least two possible numbers
+     The runtime is unbearable
 
 Fix: Including number point of view
 The number could (done in V1, existence proof) and could only(in V2, uniqueness proof) insert into that cell 
