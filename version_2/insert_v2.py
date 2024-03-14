@@ -1,7 +1,7 @@
 import validate_v2
 import retrieve
 import time
-
+import copy
 
 # insert a element in 9x9 sudoku
 def insert_9x9_element(sudoku, numbers_availability, row, col):
@@ -52,7 +52,7 @@ def insert_9x9(sudoku, numbers_availability):
     return sudoku
 
 # attempt to insert element in 9x9 sudoku until the sudoku is completed
-def start_insertion(sudoku, numbers_availability, iteration_limit = 100):
+def start_insertion(sudoku, numbers_availability, iteration_limit = 100, depth = 0 ):
     """
     insert a value iteratively [1,9] for a blank cell in 9x9 sudoku
     save the value iff a single value is valid for the cell
@@ -61,6 +61,7 @@ def start_insertion(sudoku, numbers_availability, iteration_limit = 100):
     iteration = 0
     while retrieve.count_blank_cell(sudoku) > 0:
         #print(f"{iteration}-th sudoku: {sudoku}")
+        number_of_blank = retrieve.count_blank_cell(sudoku)
         sudoku = insert_9x9(sudoku, numbers_availability)
         iteration += 1
         if iteration%10 == 0:
@@ -68,7 +69,36 @@ def start_insertion(sudoku, numbers_availability, iteration_limit = 100):
         if iteration >= iteration_limit:
             print(f"Solution Not Found, iteration limit reached {iteration}")
             break
+        if validate_v2.early_stopping(sudoku, number_of_blank):
+            print(f"Solution Not Found, early stopping at iteration {iteration}")
 
+            # activate DFS, i guess sudoku need pass copy of the dataframes <- True
+            print(f"DFS activated at iteration {iteration}")
+
+            # take the first blank cell and try to insert a value
+            row, col = retrieve.find_blank_a_cell(sudoku)
+
+            for i in range(len(numbers_availability)):
+                if numbers_availability[i].iloc[row,col] == True:
+                    new_sudoku = copy.deepcopy(sudoku)
+                    new_numbers_availability = copy.deepcopy(numbers_availability)
+                    print(f"DFS inserted {i+1} value at {row}-{col} depth {depth}")
+                    new_sudoku.iloc[row,col] = i + 1
+
+                    # mark the availability of number in the number_availability
+                    new_numbers_availability[i] = validate_v2.mark_availability(new_numbers_availability[i], row, col)
+                    # Not available for others number as the cell now occupied
+                    for j in range(9):
+                        new_numbers_availability[j].iloc[row,col] = False
+
+                    new_sudoku = start_insertion((new_sudoku), (new_numbers_availability), iteration_limit-iteration, depth+1)
+
+                    # if the DFS is successful, return the sudoku
+                    if retrieve.count_blank_cell(new_sudoku) == 0:
+                        return new_sudoku
+                    # if the DFS is not successful, try the next number
+                    else:
+                        numbers_availability[i].iloc[row,col] == False
     else:   
         print("Solution found")
 
@@ -95,5 +125,6 @@ if __name__ == '__main__':
     #9 8 6 3 1 2 5 7 4 4 5 2 8 9 7 6 1 3 3 1 7 4 5 6 8 2 9 1 2 4 6 8 5 3 9 7 87 5 9 4 3 2 6 1 6 3 9 7 2 1 4 8 5 7 4 8 2 3 9 1 5 6 2 9 1 5 6 4 7 3 8 5 63 1 7 8 9 4 2
     sudoku = retrieve.transform_str_to_df(input_sudoku)
     numbers_availability = validate_v2.create_numbers_availability(sudoku)
-    print(start_insertion(sudoku, numbers_availability,100))
-    print(sudoku.values.reshape(-1))
+    dfs_sudoku = (start_insertion(sudoku, numbers_availability,30))
+    print("simple approach\n", sudoku.values)
+    print("with dfs technic (guessing)\n", dfs_sudoku.values)

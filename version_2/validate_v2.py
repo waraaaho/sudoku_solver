@@ -126,6 +126,14 @@ def create_numbers_availability(input_sudoku):
         numbers_availability.append(temp)
     return numbers_availability
 
+def early_stopping(sudoku, old_number_of_blank) -> bool:
+    # early stopping if the sudoku cannot be further solved
+    new_number_of_blank = count_blank_cell(sudoku)
+    if new_number_of_blank == old_number_of_blank:
+        return True
+    else:
+        return False
+
 if __name__ == '__main__':
     # get input
     input_sudoku = input("Tell me the sudoku: ") 

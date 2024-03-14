@@ -15,6 +15,14 @@ def count_blank_cell(sudoku):
     # count the number of blank cell in the 9x9 matrix
     return sum(sudoku.apply(lambda x: sum(x == 0)))
 
+def find_blank_a_cell(sudoku):
+    # find the first blank cell in the 9x9 matrix
+    for i in range(9):
+        for j in range(9):
+            if sudoku.iloc[i,j] == 0:
+                return i,j
+    return -1,-1
+
 def get_position_name_by_index(index):
         # get the position name by index
         if index in [0,1,2]:
