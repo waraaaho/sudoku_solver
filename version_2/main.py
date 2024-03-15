@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-import test
 import retrieve, validate_v2, insert_v2
 
 def solver(input_sudoku):
